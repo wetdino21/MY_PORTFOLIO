@@ -96,7 +96,7 @@ const Navbar: React.FC = () => {
     }, [isDrawerOpen]);
 
     return (
-        <nav className={`${roboto_mono.className} fixed top-0 left-0 w-full p-4`}>
+        <nav className={`${roboto_mono.className} fixed top-0 left-0 w-full p-4 z-100`}>
             <div className="flex justify-between items-center">
                 {/* Logo */}
                 <div

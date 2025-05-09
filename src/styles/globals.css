@@ -4,16 +4,20 @@
 :root[data-theme="light"] {
   --background: #ffffff;
   --foreground: #171717;
-  --link-inactive: #6b7280; /* Gray-500 */
-  --link-hover: #000000; /* Black */
+  --link-inactive: #6b7280;
+  /* Gray-500 */
+  --link-hover: #000000;
+  /* Black */
 }
 
 /* Dark Theme */
 :root[data-theme="dark"] {
   --background: #0a0a0a;
   --foreground: #ededed;
-  --link-inactive: #9ca3af; /* Gray-400 */
-  --link-hover: #ffffff; /* White */
+  --link-inactive: #9ca3af;
+  /* Gray-400 */
+  --link-hover: #ffffff;
+  /* White */
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -23,11 +27,29 @@
   }
 } */
 
+/* html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+} */
+
+@theme inline {
+  --color-custom-blue: #1e3a8a;
+  /* Blue-800 */
+}
+
+.david {
+  @apply text-2xl font-bold text-custom-blue;
+}
+
 body {
+  position: relative;
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-  transition: background 0.5s, color 0.5s; /* Smooth transition for theme change */
+  transition: background 0.5s, color 0.5s;
+  /* Smooth transition for theme change */
 }
 
 .blur-trail {
