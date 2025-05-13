@@ -36,11 +36,15 @@
 
 @theme inline {
   --color-custom-blue: #1e3a8a;
-  /* Blue-800 */
+
 }
 
-.david {
-  @apply text-2xl font-bold text-custom-blue;
+.icon-hover {
+  @apply text-neutral-600 dark:text-white transition-transform transition-colors duration-300;
+}
+
+.icon-hover:hover {
+  @apply text-gray-300 scale-110;
 }
 
 body {
@@ -50,9 +54,13 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   transition: background 0.5s, color 0.5s;
   /* Smooth transition for theme change */
-}
+} 
 
 .blur-trail {
   filter: blur(3px);
   transition: filter 0.2s;
+}
+
+html {
+  scroll-behavior: smooth;
 }

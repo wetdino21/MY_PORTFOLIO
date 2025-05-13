@@ -26,10 +26,10 @@ const Navbar: React.FC = () => {
             window.history.replaceState(null, "", `#${id}`);
             setActiveSection(id);
 
-            // Allow observer to update again after scroll finishes (~1s)
+            // Allow observer to update again after scroll finishes (~1/2s)
             setTimeout(() => {
                 isManualScrolling.current = false;
-            }, 1000);
+            }, 500);
 
             // Close the drawer if it's open
             setIsDrawerOpen(false);
@@ -45,6 +45,7 @@ const Navbar: React.FC = () => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
                         const sectionId = entry.target.id;
+                        console.log("Intersecting section:", sectionId);
                         setActiveSection(sectionId);
 
                         // Change theme based on section
@@ -56,7 +57,10 @@ const Navbar: React.FC = () => {
                     }
                 });
             },
-            { threshold: 0.6 }
+            {
+                rootMargin: "-45% 0px -45% 0px",
+                threshold: [0, 0.25, 0.5, 0.75, 1]
+            }
         );
 
         sections.forEach((section) => observer.observe(section));
@@ -100,12 +104,12 @@ const Navbar: React.FC = () => {
             <div className="flex justify-between items-center">
                 {/* Logo */}
                 <div
-                    className={`text-xl font-bold cursor-pointer ${theme === "light" ? "text-black" : "text-white"
-                        }`}
+                    className={`text-xl font-bold cursor-pointer ${theme === "light" ? "text-black" : "text-white"}`}
                     onClick={() => scrollToSection("about")}
                 >
-                    MyLogo
+                    <img src="/m_logo.png" alt="logo" className={`w-16 h-auto rounded-full transition-all duration-300 ${theme === "dark" ? "invert" : ""}`} />
                 </div>
+
 
                 {/* Desktop Nav Links */}
                 <ul className="hidden md:flex gap-8">

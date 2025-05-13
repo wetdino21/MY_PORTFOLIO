@@ -153,23 +153,3 @@ export const useMouseEnter = () => {
   }
   return context;
 };
-
-export const ProfileCard = () => {
-    return (
-      <CardContainer>
-        <CardBody>
-          <CardItem
-            translateZ={50}
-            className="w-full h-full overflow-hidden rounded-xl"
-          > 
-            <img
-              src="/profile.png" // replace with your actual image path
-              alt="Michael"
-              className="w-full h-full object-cover rounded-xl"
-            />
-          </CardItem>
-        </CardBody>
-      </CardContainer>
-    );
-  };
-  

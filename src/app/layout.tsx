@@ -19,13 +19,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${roboto_mono.variable} antialiased`}
+        className={`${roboto_mono.variable} antialiased relative min-h-screen`}
       >
-        <ShootingStars />
-        <StarsBackground />
-        <Navbar />
-        {children}
-        <Footer />
+        {/* Background effects wrapper */}
+        <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+          <ShootingStars />
+          <StarsBackground />
+        </div>
+
+        {/* Main content */}
+        <div className="relative z-0">
+          <Navbar />
+          {children}
+          <Footer />
+        </div>
       </body>
     </html>
   );
