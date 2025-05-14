@@ -10,7 +10,7 @@ const Projects: React.FC = () => {
     const data = [
         {
             title: "2025",
-            filePath: "/lifewood_game/index.html",
+            filePath: "https://michael-lifewood-game.vercel.app/",
             content: (
                 <div>
                     <p className="mb-8  md:text-sm ">
