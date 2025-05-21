@@ -39,7 +39,7 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
             ref={containerRef}
         >
             <div className="max-w-7xl pt-20 ">
-                <p className="text-sm md:text-sm mb-4 text-black dark:text-white ">
+                <p className="text-sm md:text-sm mb-4">
                     A timeline of my journey.
                 </p>
             </div>

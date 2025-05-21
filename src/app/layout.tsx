@@ -7,7 +7,7 @@ import { ShootingStars } from "@/components/ui/shooting-stars";
 import { StarsBackground } from "@/components/ui/stars-background";
 
 export const metadata: Metadata = {
-  title: "My Portfolio", // Change this to your desired title
+  title: "Michael's Portfolio", // Change this to your desired title
   description: "Welcome to my portfolio website!", // Update the description
 };
 

@@ -9,6 +9,7 @@ const Navbar: React.FC = () => {
     const isManualScrolling = useRef(false);
     const [theme, setTheme] = useState<"light" | "dark">("light"); // Manage theme state
     const [isDrawerOpen, setIsDrawerOpen] = useState(false); // Manage drawer state
+    const toggleRef = useRef<HTMLDivElement>(null);
 
     const scrollToSection = (id: string) => {
         const section = document.getElementById(id);
@@ -16,9 +17,9 @@ const Navbar: React.FC = () => {
             isManualScrolling.current = true;
 
             // Update theme immediately based on the target section
-            if (id === "about" || id === "contact") {
+            if (id === "projects") {
                 setTheme("light");
-            } else if (id === "projects") {
+            } else if (id === "about" || id === "contact") {
                 setTheme("dark");
             }
 
@@ -49,9 +50,9 @@ const Navbar: React.FC = () => {
                         setActiveSection(sectionId);
 
                         // Change theme based on section
-                        if (sectionId === "about" || sectionId === "contact") {
+                        if (sectionId === "projects") {
                             setTheme("light");
-                        } else if (sectionId === "projects") {
+                        } else if (sectionId === "about" || sectionId === "contact") {
                             setTheme("dark");
                         }
                     }
@@ -77,12 +78,23 @@ const Navbar: React.FC = () => {
 
     //close drawer on click outside or resize
     useEffect(() => {
+        console.warn("Drawer state changed:", isDrawerOpen);
         const handleClickOutside = (event: MouseEvent) => {
             const drawer = document.querySelector(".drawer");
-            if (isDrawerOpen && drawer && !drawer.contains(event.target as Node)) {
+            const toggle = toggleRef.current;
+
+            if (
+                isDrawerOpen &&
+                drawer &&
+                !drawer.contains(event.target as Node) &&
+                toggle &&
+                !toggle.contains(event.target as Node)
+            ) {
                 setIsDrawerOpen(false);
+                console.warn("clicked outside");
             }
         };
+
 
         const handleResize = () => {
             if (window.innerWidth >= 768 && isDrawerOpen) {
@@ -93,14 +105,14 @@ const Navbar: React.FC = () => {
         document.addEventListener("mousedown", handleClickOutside);
         window.addEventListener("resize", handleResize);
 
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-            window.removeEventListener("resize", handleResize);
-        };
+        // return () => {
+        //     document.removeEventListener("mousedown", handleClickOutside);
+        //     window.removeEventListener("resize", handleResize);
+        // };
     }, [isDrawerOpen]);
 
     return (
-        <nav className={`${roboto_mono.className} fixed top-0 left-0 w-full p-4 z-100`}>
+        <nav className={`${roboto_mono.className} fixed top-0 left-0 w-full p-4 z-100 text-xs`}>
             <div className="flex justify-between items-center">
                 {/* Logo */}
                 <div
@@ -146,9 +158,12 @@ const Navbar: React.FC = () => {
                 </ul>
 
                 {/* Mobile Drawer Toggle */}
-                <div
+                <div ref={toggleRef}
                     className="md:hidden cursor-pointer z-50 "
-                    onClick={() => setIsDrawerOpen(!isDrawerOpen)}
+                    onClick={() => {
+                        setIsDrawerOpen(!isDrawerOpen)
+                    }}
+
                 >
                     {isDrawerOpen ? (
                         <motion.div
@@ -180,8 +195,12 @@ const Navbar: React.FC = () => {
                         animate={{ x: 0 }}
                         exit={{ x: "100%" }}
                         transition={{ duration: 0.3 }}
-                        className={`drawer fixed top-0 right-0 h-full w-3/4 shadow-lg p-8 ${theme === "light" ? "bg-white" : "bg-gray-900 bg-opacity-80"
-                            }`}
+                        className={`drawer fixed top-0 right-0 h-full w-3/4 shadow-lg p-8 
+                            ${theme === "light"
+                                ? "bg-white border-l border-gray-300"
+                                : "bg-gray-950 bg-opacity-80 border-l border-gray-700"}
+                                `}
+
                     >
                         <ul className="flex flex-col gap-6">
                             {[

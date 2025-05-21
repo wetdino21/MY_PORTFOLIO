@@ -57,8 +57,9 @@ export const TypewriterEffectSmooth = ({
   return (
     <div className={cn("inline-block", className)}>
       <motion.div
-        className="text-xs sm:text-base md:text-lg lg:text-lg xl:text-2xl font-bold "
+        className="text-lg sm:text-lg md:text-xl lg:text-2xl xl:text-4xl font-bold "
       >
+        a
         {displayText}
       </motion.div>
     </div>
