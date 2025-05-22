@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { roboto_mono } from "../../styles/fonts";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSection } from "@/context/SectionContext";
 
 const Navbar: React.FC = () => {
     const [activeSection, setActiveSection] = useState<string>("about");
@@ -10,6 +11,7 @@ const Navbar: React.FC = () => {
     const [theme, setTheme] = useState<"light" | "dark">("light"); // Manage theme state
     const [isDrawerOpen, setIsDrawerOpen] = useState(false); // Manage drawer state
     const toggleRef = useRef<HTMLDivElement>(null);
+    const { setSection } = useSection();
 
     const scrollToSection = (id: string) => {
         const section = document.getElementById(id);
@@ -26,6 +28,7 @@ const Navbar: React.FC = () => {
             section.scrollIntoView({ behavior: "smooth" });
             window.history.replaceState(null, "", `#${id}`);
             setActiveSection(id);
+            setSection(id);
 
             // Allow observer to update again after scroll finishes (~1/2s)
             setTimeout(() => {
@@ -48,7 +51,8 @@ const Navbar: React.FC = () => {
                         const sectionId = entry.target.id;
                         console.log("Intersecting section:", sectionId);
                         setActiveSection(sectionId);
-
+                        setSection(sectionId);
+                        
                         // Change theme based on section
                         if (sectionId === "projects") {
                             setTheme("light");
