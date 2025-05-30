@@ -12,6 +12,9 @@ const Navbar: React.FC = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false); // Manage drawer state
     const toggleRef = useRef<HTMLDivElement>(null);
     const { setSection } = useSection();
+    const [showNavbar, setShowNavbar] = useState(true);
+    const lastScrollY = useRef(0);
+
 
     const scrollToSection = (id: string) => {
         const section = document.getElementById(id);
@@ -52,7 +55,7 @@ const Navbar: React.FC = () => {
                         console.log("Intersecting section:", sectionId);
                         setActiveSection(sectionId);
                         setSection(sectionId);
-                        
+
                         // Change theme based on section
                         if (sectionId === "projects") {
                             setTheme("light");
@@ -77,12 +80,15 @@ const Navbar: React.FC = () => {
 
     useEffect(() => {
         // Apply theme to the root element
-        document.documentElement.setAttribute("data-theme", theme);
+        if (theme === "dark") {
+            document.documentElement.classList.add("dark");
+        } else {
+            document.documentElement.classList.remove("dark");
+        }
     }, [theme]);
 
     //close drawer on click outside or resize
     useEffect(() => {
-        console.warn("Drawer state changed:", isDrawerOpen);
         const handleClickOutside = (event: MouseEvent) => {
             const drawer = document.querySelector(".drawer");
             const toggle = toggleRef.current;
@@ -95,7 +101,6 @@ const Navbar: React.FC = () => {
                 !toggle.contains(event.target as Node)
             ) {
                 setIsDrawerOpen(false);
-                console.warn("clicked outside");
             }
         };
 
@@ -115,12 +120,40 @@ const Navbar: React.FC = () => {
         // };
     }, [isDrawerOpen]);
 
+    //sticky navbar
+    useEffect(() => {
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+
+            if (currentScrollY > lastScrollY.current && currentScrollY > 50) {
+                // Scrolling down
+                setShowNavbar(false);
+            } else {
+                // Scrolling up
+                setShowNavbar(true);
+            }
+
+            lastScrollY.current = currentScrollY;
+        };
+
+        window.addEventListener("scroll", handleScroll);
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
+    }, []);
+
     return (
-        <nav className={`${roboto_mono.className} fixed top-0 left-0 w-full p-4 z-100 text-xs`}>
+        <nav className={`
+            ${roboto_mono.className}
+            fixed w-full p-4 z-50 transition-transform duration-300
+            ${showNavbar ? "translate-y-0" : "-translate-y-full"}
+            `}>
+
             <div className="flex justify-between items-center">
                 {/* Logo */}
                 <div
-                    className={`text-xl font-bold cursor-pointer ${theme === "light" ? "text-black" : "text-white"}`}
+                    className={`text-xl font-bold cursor-pointer transition-colors duration-300 ${theme === "light" ? "text-black" : "text-white"}`}
                     onClick={() => scrollToSection("about")}
                 >
                     <img src="/m_logo.png" alt="logo" className={`w-16 h-auto rounded-full transition-all duration-300 ${theme === "dark" ? "invert" : ""}`} />
@@ -130,7 +163,7 @@ const Navbar: React.FC = () => {
                 {/* Desktop Nav Links */}
                 <ul className="hidden md:flex gap-8">
                     {[
-                        { id: "about", label: "About Me" },
+                        { id: "about", label: "About_Me" },
                         { id: "projects", label: "Projects" },
                         { id: "contact", label: "Contact" },
                     ].map((item) => {
@@ -138,24 +171,25 @@ const Navbar: React.FC = () => {
                         return (
                             <li
                                 key={item.id}
-                                className={`relative cursor-pointer font-bold group`}
+                                className={`relative cursor-pointer font-extrabold group`}
                                 onClick={() => scrollToSection(item.id)}
                                 aria-current={isActive ? "page" : undefined}
                             >
                                 <motion.span
-                                    className={`block transition-transform duration-200 ${isActive
-                                        ? theme === "light"
-                                            ? "text-black"
-                                            : "text-white"
-                                        : theme === "light"
-                                            ? "text-gray-500 group-hover:text-black"
-                                            : "text-gray-400 group-hover:text-white"
-                                        }`}
+                                    className={`block transition-transform duration-200 
+                                        ${!isActive
+                                            ? theme === "light"
+                                                ? "text-gray-500 group-hover:text-black"
+                                                : "text-gray-400 group-hover:text-white"
+                                            : ""
+                                        } 
+                                        `}
                                     animate={{ scale: isActive ? 1.2 : 1 }}
                                     transition={{ duration: 0.2 }}
                                 >
                                     {item.label}
                                 </motion.span>
+
                             </li>
                         );
                     })}

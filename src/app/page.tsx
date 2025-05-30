@@ -7,10 +7,12 @@ const Page: React.FC = () => {
   return (
     <main>
       <About />
-      <Projects />
+      <Projects />  
       <Contact />
     </main>
   );
 };
 
 export default Page;
+
+

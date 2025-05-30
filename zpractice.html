@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Blend Mode Demo</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 20px;
+      z-index: 1000;
+      mix-blend-mode: difference;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    section {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 20px;
+    }
+
+    .white-bg {
+      background-color: white;
+      color: black;
+    }
+
+    .black-bg {
+      background-color: black;
+      color: white;
+    }
+
+    .gradient-bg {
+      background: linear-gradient(to right, red, blue);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <header>Header (Blend Mode: Difference)</header>
+
+  <section class="white-bg">White Background</section>
+  <section class="black-bg">Black Background</section>
+  <section class="gradient-bg">Gradient Background</section>
+
+</body>
+</html>

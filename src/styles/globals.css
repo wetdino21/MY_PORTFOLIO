@@ -1,37 +1,62 @@
 @import "tailwindcss";
 
 /* Light Theme */
-:root[data-theme="light"] {
+:root {
   --background: #ffffff;
   --foreground: #171717;
   --link-inactive: #6b7280;
-  /* Gray-500 */
   --link-hover: #000000;
-  /* Black */
+  --theme: #ffffff;
+  --theme-inverted: #000000;
+  --invert-filter: invert(1);
 }
 
 /* Dark Theme */
-:root[data-theme="dark"] {
+.dark {
   --background: #0a0a0a;
   --foreground: #ededed;
   --link-inactive: #9ca3af;
-  /* Gray-400 */
   --link-hover: #ffffff;
-  /* White */
+  --theme: #000000;
+  --theme-inverted: #d6d8dd;
+  --invert-filter: invert(0);
 }
 
-
 @theme inline {
+  --background: var(--background);
+  --foreground: var(--foreground);
   --color-custom-blue: #1e3a8a;
-
+  --color-theme: var(--theme);
+  --color-theme-inverted: var(--theme-inverted);
+  --filter-invert-filter: var(--invert-filter);
 }
 
 .icon-hover {
-  @apply text-neutral-600 dark:text-white transition-transform transition-colors duration-300;
+  @apply text-neutral-900 dark:text-white duration-300 hover:text-purple-900 hover:scale-110;
 }
 
-.icon-hover:hover {
-  @apply text-gray-300 scale-110;
+.tooltip-icon {
+  @apply absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-10;
+}
+
+.tooltip-icon-below {
+  @apply absolute top-8 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-10;
+}
+
+/* .icon-box {
+  @apply bg-gray-900 text-white p-1 rounded-md hover:bg-transparent hover:text-black hover:scale-110 transition;
+} */
+
+.icon-box {
+  @apply text-black p-1 rounded-sm transition border-gray-500 border-1;
+}
+
+.card-timeline {
+  @apply h-full w-full rounded-lg object-cover shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset] ;
+}
+
+.box-card-timeline {
+  @apply grid lg:grid-cols-2 gap-4;
 }
 
 body {
