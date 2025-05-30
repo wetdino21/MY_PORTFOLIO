@@ -17,7 +17,11 @@ const funnyMessages = [
     "Compiling dark mode in deep space...",
     "Optimizing zero-gravity algorithms...",
     "Debugging quantum entanglement...",
+    "Streaming logs from the stratosphere...",
+    "Installing nebula-based dependencies...",
+    "Linting asteroids for syntax errors...",
 ];
+
 
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
@@ -27,7 +31,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     useEffect(() => {
         const interval = setInterval(() => {
             setMessageIndex((prev) => (prev + 1) % funnyMessages.length)
-        }, 2000)
+        }, 500)
 
         return () => clearInterval(interval)
     }, [])
