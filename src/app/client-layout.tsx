@@ -31,7 +31,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     useEffect(() => {
         const interval = setInterval(() => {
             setMessageIndex((prev) => (prev + 1) % funnyMessages.length)
-        }, 500)
+        }, 700)
 
         return () => clearInterval(interval)
     }, [])

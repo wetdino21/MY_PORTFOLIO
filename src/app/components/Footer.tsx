@@ -1,8 +1,9 @@
 import React from 'react';
+import { pacifico, roboto_mono, roboto_condensed } from "@/styles/fonts";
 
 const Footer: React.FC = () => {
     return (
-        <footer style={{ padding: '20px', textAlign: 'center', background: '#333', color: '#fff' }}>
+        <footer className={`footer ${roboto_mono.className}`}>
             <p>&copy; 2025 Michael's Portfolio. All rights reserved.</p>
         </footer>
     );

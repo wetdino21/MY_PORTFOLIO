@@ -7,15 +7,16 @@ import {
     IconBoxAlignRightFilled,
     IconClipboardCopy,
     IconFileBroken,
+    IconQuestionMark,
     IconSignature,
     IconTableColumn,
 } from "@tabler/icons-react";
 import { motion } from "motion/react";
-import { pacifico, roboto_mono, roboto_condensed } from "../../../styles/fonts";
+import { pacifico, roboto_mono, roboto_condensed } from "@/styles/fonts";
 // import { ProfileCard } from "@/components/ui/3d-card"; // adjust the path as needed
 import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect"; // adjust the path as needed
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
-import { FaGithub, FaFacebook, FaLinkedin, FaInstagram, FaEnvelope } from "react-icons/fa";
+import { FaGithub, FaFacebook, FaLinkedin, FaInstagram, FaEnvelope, FaMusic } from "react-icons/fa";
 import {
     SiFlutter,
     SiNextdotjs,
@@ -33,8 +34,10 @@ import {
     SiSqlite,
     SiFramer,
 } from "react-icons/si";
-import { LuFileUser, LuDownload } from "react-icons/lu";
+import { GiMusicalNotes } from "react-icons/gi";
+import { LuFileUser, LuDownload, LuFileMusic, LuMusic } from "react-icons/lu";
 import { FloatingDock } from "@/components/ui/floating-dock";
+import { MiniPlayer } from "@/components/ui/mini-player";
 
 const About: React.FC = () => {
     const words = [
@@ -353,21 +356,23 @@ const SkeletonOne = () => {
                 variants={variants}
                 className="flex flex-row rounded-full border border-neutral-100 dark:border-white/[0.2] p-2  items-center space-x-2 bg-white dark:bg-black"
             >
-                <div className="h-6 w-6 rounded-full bg-gradient-to-r from-pink-500 to-violet-500 shrink-0" />
+
+                <LuMusic className="text-xl hover:scale-110 h-6 w-6 rounded-full shrink-0" />
+                {/* <div className="h-6 w-6 rounded-full bg-gradient-to-r from-pink-500 to-violet-500 shrink-0" /> */}
                 <div className="w-full bg-gray-100 h-4 rounded-full dark:bg-neutral-900" />
             </motion.div>
             <motion.div
                 variants={variantsSecond}
                 className="flex flex-row rounded-full border border-neutral-100 dark:border-white/[0.2] p-2 items-center space-x-2 w-3/4 ml-auto bg-white dark:bg-black"
             >
+                <GiMusicalNotes className="text-l hover:scale-110 h-6 w-6 rounded-full shrink-0" />
                 <div className="w-full bg-gray-100 h-4 rounded-full dark:bg-neutral-900" />
-                <div className="h-6 w-6 rounded-full bg-gradient-to-r from-pink-500 to-violet-500 shrink-0" />
             </motion.div>
             <motion.div
                 variants={variants}
                 className="flex flex-row rounded-full border border-neutral-100 dark:border-white/[0.2] p-2 items-center space-x-2 bg-white dark:bg-black"
             >
-                <div className="h-6 w-6 rounded-full bg-gradient-to-r from-pink-500 to-violet-500 shrink-0" />
+                <LuFileMusic className="text-xl hover:scale-110 h-6 w-6 rounded-full shrink-0" />
                 <div className="w-full bg-gray-100 h-4 rounded-full dark:bg-neutral-900" />
             </motion.div>
         </motion.div>
@@ -589,23 +594,29 @@ const SkeletonFive = () => {
 };
 const items = [
     {
-        title: "AI Content Generation",
-        description: (
-            <span className="text-sm">
-                Experience the power of AI in generating unique content.
-            </span>
-        ),
+        description: <MiniPlayer />,
         header: <SkeletonOne />,
         className: "md:col-span-1",
-        icon: <IconClipboardCopy className="h-4 w-4 text-neutral-500" />,
+        icon: (
+            <div className="relative group h-5 w-5 flex items-center justify-center">
+                <span className="absolute bottom-full mb-1 px-2 py-1 rounded bg-black text-white text-xs opacity-0 group-hover:opacity-100 transition pointer-events-none z-10 whitespace-nowrap">
+                    This music was generated using AI.
+                </span>
+                <div className="rounded-full h-5 w-5 flex items-center justify-center">
+                    <IconQuestionMark className="h-4 w-4 text-neutral-500 border-2 border-neutral-500 rounded-full" />
+                </div>
+            </div>
+        ),
+
     },
     {
         title: "Automated Proofreading",
-        description: (
-            <span className="text-sm">
-                Let AI handle the proofreading of your documents.
-            </span>
-        ),
+        description:
+            (
+                <span className="text-sm">
+                    Let AI handle the proofreading of your documents.
+                </span>
+            ),
         header: <SkeletonTwo />,
         className: "md:col-span-1",
         icon: <IconFileBroken className="h-4 w-4 text-neutral-500" />,
