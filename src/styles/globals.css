@@ -108,3 +108,7 @@ html {
 .footer {
   @apply p-5 text-center dark:text-white dark:bg-black;
 }
+
+.tooltip {
+  @apply absolute bottom-full right-0 mb-1 px-2 py-1 rounded bg-black text-white text-xs opacity-0 group-hover:opacity-100 transition pointer-events-none z-10 sm:whitespace-nowrap;
+}

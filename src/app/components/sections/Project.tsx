@@ -320,7 +320,7 @@ const Projects: React.FC = () => {
                         </AnimatedCard>
                         <AnimatedCard index={0}>
                             <img
-                                src="https://assets.aceternity.com/templates/startup-3.webp"
+                                src="/projects/lifewood_web1.png"
                                 width={500}
                                 height={500}
                                 className="card-timeline"
@@ -328,7 +328,7 @@ const Projects: React.FC = () => {
                         </AnimatedCard>
                         <AnimatedCard index={0}>
                             <img
-                                src="https://assets.aceternity.com/templates/startup-4.webp"
+                                src="/projects/lifewood_web2.png"
                                 width={500}
                                 height={500}
                                 className="card-timeline"
@@ -570,7 +570,7 @@ const Projects: React.FC = () => {
 
 
     return (
-        <section id="projects" className={`overflow-x-hidden overflow-y-auto min-h-screen ${roboto_mono.className} text-center py-20`}>
+        <section id="projects" className={`overflow-hidden min-h-screen ${roboto_mono.className} text-center py-20`}>
             <h2 className="text-5xl font-bold">My Projects</h2>
             <p className="text-lg mb-10">Here are some of the projects I've worked on.</p>
 

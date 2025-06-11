@@ -1,25 +1,14 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import { FaPlay, FaPause, FaStepBackward, FaStepForward } from "react-icons/fa";
 
-const tracks = [
-  {
-    src: "/music/ambient_night.mp3",
-    title: "Night Space",
-  },
-  {
-    src: "/music/anime_banger.mp3",
-    title: "Anime Banger",
-  },
-  {
-    src: "/music/adventure.mp3",
-    title: "Adventure",
-  },
-];
-
-export const MiniPlayer: React.FC = () => {
-  const [current, setCurrent] = useState(0);
-  const [playing, setPlaying] = useState(false);
-  const [progress, setProgress] = useState(0);
+export const MiniPlayer: React.FC<{
+  tracks: { src: string; title: string }[];
+  current: number;
+  setCurrent: (n: number) => void;
+  playing: boolean;
+  setPlaying: (b: boolean) => void;
+}> = ({ tracks, current, setCurrent, playing, setPlaying }) => {
+  const [progress, setProgress] = React.useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   // Handle play/pause
@@ -35,15 +24,15 @@ export const MiniPlayer: React.FC = () => {
 
   // Handle prev/next
   const prevTrack = () => {
-    setCurrent((prev) => (prev === 0 ? tracks.length - 1 : prev - 1));
+    setCurrent(current === 0 ? tracks.length - 1 : current - 1);
     setProgress(0);
-    setPlaying(true);
+    // Don't call setPlaying(true) here; let the useEffect handle it
   };
 
   const nextTrack = () => {
-    setCurrent((prev) => (prev === tracks.length - 1 ? 0 : prev + 1));
+    setCurrent(current === tracks.length - 1 ? 0 : current + 1);
     setProgress(0);
-    setPlaying(true);
+    // Don't call setPlaying(true) here; let the useEffect handle it
   };
 
   // Update progress
@@ -53,17 +42,30 @@ export const MiniPlayer: React.FC = () => {
     setProgress(isNaN(percent) ? 0 : percent);
   };
 
-  // Only reset currentTime when track changes
-  React.useEffect(() => {
-    setProgress(0);
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0;
-    }
-    // Do not pause or setPlaying(false) here!
-  }, [current]);
+  // Reset currentTime and ensure playing state when track changes
+  useEffect(() => {
+    if (!audioRef.current) return;
 
-  // Only play/pause when playing changes (do NOT reset currentTime here)
-  React.useEffect(() => {
+    const audio = audioRef.current;
+
+    // Reset progress and time only when the track changes
+    audio.currentTime = 0;
+    setProgress(0);
+
+    // If the player was playing, ensure it continues playing the new track
+    if (playing) {
+      const onCanPlay = () => {
+        audio.play();
+      };
+      audio.addEventListener("canplay", onCanPlay);
+      return () => {
+        audio.removeEventListener("canplay", onCanPlay);
+      };
+    }
+  }, [current]); // Removed 'playing' from dependencies to avoid interference
+
+  // Handle play/pause state changes
+  useEffect(() => {
     if (!audioRef.current) return;
     if (playing) {
       audioRef.current.play();
