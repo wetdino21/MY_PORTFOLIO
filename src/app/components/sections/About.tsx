@@ -33,8 +33,16 @@ import {
     SiPostgresql,
     SiSqlite,
     SiFramer,
+    SiTypescript,
+    SiDotnet,
+    SiSharp,
+    SiFirebase,
+    SiGodotengine,
+
 } from "react-icons/si";
 import { GiMusicalNotes } from "react-icons/gi";
+import { DiMsqlServer, DiVisualstudio } from "react-icons/di";
+import { BiLogoVisualStudio } from "react-icons/bi";
 import { LuFileUser, LuDownload, LuEraser, LuPen, LuFileMusic, LuMusic } from "react-icons/lu";
 import { FloatingDock } from "@/components/ui/floating-dock";
 import { MiniPlayer } from "@/components/ui/mini-player";
@@ -53,102 +61,44 @@ const About: React.FC = () => {
     ];
 
     const techStack = [
-        {
-            title: "Flutter",
-            icon: <SiFlutter className="h-full w-full" />,
-            href: "https://flutter.dev",
-        },
-        {
-            title: "Next.js",
-            icon: <SiNextdotjs className="h-full w-full" />,
-            href: "https://nextjs.org",
-        },
-        {
-            title: "React",
-            icon: <SiReact className="h-full w-full" />,
-            href: "https://react.dev",
-        },
-        {
-            title: "Node.js",
-            icon: <SiNodedotjs className="h-full" />,
-            href: "https://nodejs.org",
-        },
-        {
-            title: "GitHub",
-            icon: <SiGithub className="h-full w-full" />,
-            href: "https://github.com",
-        },
-        {
-            title: "Git",
-            icon: <SiGit className="h-full w-full" />,
-            href: "https://git-scm.com",
-        },
-        {
-            title: "HTML",
-            icon: <SiHtml5 className="h-full w-full" />,
-            href: "https://developer.mozilla.org/en-US/docs/Web/HTML",
-        },
-        {
-            title: "CSS",
-            icon: <SiCss3 className="h-full w-full" />,
-            href: "https://developer.mozilla.org/en-US/docs/Web/CSS",
-        },
-        {
-            title: "JavaScript",
-            icon: <SiJavascript className="h-full w-full" />,
-            href: "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
-        },
-        {
-            title: "Figma",
-            icon: <SiFigma className="h-full w-full" />,
-            href: "https://figma.com",
-        },
-        {
-            title: "Vercel",
-            icon: <SiVercel className="h-full w-full" />,
-            href: "https://vercel.com",
-        },
-        {
-            title: "MongoDB",
-            icon: <SiMongodb className="h-full w-full" />,
-            href: "https://mongodb.com",
-        },
-        {
-            title: "PostgreSQL",
-            icon: <SiPostgresql className="h-full w-full" />,
-            href: "https://www.postgresql.org",
-        },
-        {
-            title: "SQLite",
-            icon: <SiSqlite className="h-full w-full" />,
-            href: "https://www.sqlite.org",
-        },
-        {
-            title: "Framer Motion",
-            icon: <SiFramer className="h-full w-full" />,
-            href: "https://www.framer.com/motion/",
-        },
-        {
-            title: "Aceternity",
-            icon: (
-                <img
-                    src="https://assets.aceternity.com/logo-dark.png"
-                    alt="Aceternity"
-                    className="h-full w-full"
-                    style={{ filter: 'invert-filter' }}
-                />
-            ),
-            href: "https://ui.aceternity.com",
-        },
+        { title: "Flutter", icon: <SiFlutter className="h-full w-full" />, href: "https://flutter.dev" },
+        { title: "Next.js", icon: <SiNextdotjs className="h-full w-full" />, href: "https://nextjs.org" },
+        { title: "React", icon: <SiReact className="h-full w-full" />, href: "https://react.dev" },
+        { title: "Node.js", icon: <SiNodedotjs className="h-full" />, href: "https://nodejs.org" },
+        { title: "GitHub", icon: <SiGithub className="h-full w-full" />, href: "https://github.com" },
+        { title: "Git", icon: <SiGit className="h-full w-full" />, href: "https://git-scm.com" },
+        { title: "HTML", icon: <SiHtml5 className="h-full w-full" />, href: "https://developer.mozilla.org/en-US/docs/Web/HTML" },
+        { title: "CSS", icon: <SiCss3 className="h-full w-full" />, href: "https://developer.mozilla.org/en-US/docs/Web/CSS" },
+        { title: "JavaScript", icon: <SiJavascript className="h-full w-full" />, href: "https://developer.mozilla.org/en-US/docs/Web/JavaScript" },
+        { title: "TypeScript", icon: <SiTypescript className="h-full w-full" />, href: "https://www.typescriptlang.org/" },
+        { title: "Figma", icon: <SiFigma className="h-full w-full" />, href: "https://figma.com" },
+        { title: "Vercel", icon: <SiVercel className="h-full w-full" />, href: "https://vercel.com" },
+        { title: "MongoDB", icon: <SiMongodb className="h-full w-full" />, href: "https://mongodb.com" },
+        { title: "PostgreSQL", icon: <SiPostgresql className="h-full w-full" />, href: "https://www.postgresql.org" },
+        { title: "SQLite", icon: <SiSqlite className="h-full w-full" />, href: "https://www.sqlite.org" },
+        { title: "Framer Motion", icon: <SiFramer className="h-full w-full" />, href: "https://www.framer.com/motion/" },
+        { title: "ASP.NET WebForms", icon: <SiDotnet className="h-full w-full" />, href: "https://learn.microsoft.com/en-us/aspnet/web-forms/" },
+        { title: "C#", icon: <SiSharp className="h-full w-full" />, href: "https://learn.microsoft.com/en-us/dotnet/csharp/" },
+        { title: "SQL Server", icon: <DiMsqlServer className="h-full w-full" />, href: "https://learn.microsoft.com/en-us/sql/sql-server/" },
+        { title: "Visual Studio Code", icon: <BiLogoVisualStudio className="h-full w-full" />, href: "https://code.visualstudio.com/" },
+        { title: "Visual Studio", icon: <DiVisualstudio className="h-full w-full" />, href: "https://visualstudio.microsoft.com/" },
+        { title: "Firebase", icon: <SiFirebase className="h-full w-full" />, href: "https://firebase.google.com/" },
+        { title: "Godot Engine", icon: <SiGodotengine className="h-full w-full" />, href: "https://godotengine.org/" },
     ];
 
+
     const frontendStack = techStack.filter((item) =>
-        ["Flutter", "Next.js", "React", "HTML", "CSS", "JavaScript", "Figma", "Framer Motion", "Aceternity"].includes(item.title)
+        ["Flutter", "Next.js", "React", "HTML", "CSS", "JavaScript", "TypeScript", "Figma", "Framer Motion"].includes(item.title)
     );
 
     const backendStack = techStack.filter((item) =>
-        ["Node.js", "GitHub", "Git", "Vercel", "MongoDB", "PostgreSQL", "SQLite"].includes(item.title)
+        ["Node.js", "ASP.NET WebForms", "C#", "SQL Server", "MongoDB", "PostgreSQL", "Firebase", "SQLite"].includes(item.title)
     );
+
+    const toolsStack = techStack.filter((item) =>
+        ["GitHub", "Git", "Vercel", "Visual Studio Code", "Visual Studio", "Godot Engine"].includes(item.title)
+    );
+
 
     return (
         <section
@@ -157,7 +107,7 @@ const About: React.FC = () => {
         >
             <div className="m-auto py-20 h-full grid grid-cols-1 lg:grid-cols-2 items-center">
                 {/* Left Column: 3D Image Card */}
-                <div className="flex flex-col items-center lg:items-end pr-10">
+                <div className="flex flex-col items-center lg:items-end lg:pr-10">
                     {/* <ProfileCard /> */}
                     <CardContainer className="inter-var cursor-pointer">
                         <CardBody className="bg-gray-50 relative group/card dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-white dark:border-white/[0.2] border-black/[0.1] w-auto h-auto rounded-xl p-6 border">
@@ -281,26 +231,35 @@ const About: React.FC = () => {
             </div>
 
             {/* Tech Stack Below Grid */}
-            <div className="mt-20 px-4 md:px-0">
+            <div className="mt-20 px-4 lg:px-0">
                 <h2 className="text-xl font-semibold mb-4">Tech Stack</h2>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-1 xl:gap-5">
                     {/* Frontend */}
                     <div>
-                        <h3 className="dark:bg-forgr text-lg font-medium mb-4">Frontend</h3>
-                        <div className="max-sm:m-1 sm:mx-5 lg:ml-20">
+                        <h3 className="text-lg font-medium mb-4">Frontend</h3>
+                        <div className="max-sm:m-1 lg:ml-5">
                             <FloatingDock items={frontendStack} />
                         </div>
                     </div>
 
-                    {/* Backend */}
+                    {/* Backend & Databases */}
                     <div>
                         <h3 className="text-lg font-medium mb-4">Backend</h3>
-                        <div className="max-sm:m-1 sm:mx-5 lg:mr-20">
+                        <div className="max-sm:m-1 lg:mr-5">
                             <FloatingDock items={backendStack} />
                         </div>
                     </div>
                 </div>
+
+                {/* Tools & Platforms */}
+                <div className="mt-12">
+                    <h3 className="text-lg font-medium mb-4 text-center">Tools & Platforms</h3>
+                    <div className="mx-auto w-full lg:max-w-2xl px-1">
+                        <FloatingDock items={toolsStack} />
+                    </div>
+                </div>
             </div>
+
 
 
             <div className="my-30"></div>

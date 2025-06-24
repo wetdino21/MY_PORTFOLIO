@@ -15,6 +15,7 @@ export default function ButterflyWithSparkles() {
     about: "/rocket.gif",
     projects: "/butterfly.gif",
     contact: "/rocket.gif",
+    playbox: "/rocket.gif",
   };
 
   const gifSrc = gifMap[section] || "/butterfly.gif";

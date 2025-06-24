@@ -24,7 +24,7 @@ const Navbar: React.FC = () => {
             // Update theme immediately based on the target section
             if (id === "projects") {
                 setTheme("light");
-            } else if (id === "about" || id === "contact") {
+            } else if (id === "about" || id === "contact" || id === "playbox") {
                 setTheme("dark");
             }
 
@@ -59,7 +59,7 @@ const Navbar: React.FC = () => {
                         // Change theme based on section
                         if (sectionId === "projects") {
                             setTheme("light");
-                        } else if (sectionId === "about" || sectionId === "contact") {
+                        } else if (sectionId === "about" || sectionId === "contact" || sectionId === "playbox") {
                             setTheme("dark");
                         }
                     }
@@ -233,7 +233,7 @@ const Navbar: React.FC = () => {
                         animate={{ x: 0 }}
                         exit={{ x: "100%" }}
                         transition={{ duration: 0.3 }}
-                        className={`drawer fixed top-0 right-0 h-full w-3/4 shadow-lg p-8 
+                        className={`drawer fixed top-0 right-0 w-3/4 shadow-lg p-8 
                             ${theme === "light"
                                 ? "bg-white border-l border-gray-300"
                                 : "bg-gray-950 bg-opacity-80 border-l border-gray-700"}

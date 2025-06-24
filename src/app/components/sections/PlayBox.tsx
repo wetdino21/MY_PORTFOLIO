@@ -15,6 +15,35 @@ import { pacifico, roboto_mono, roboto_condensed } from "@/styles/fonts";
 import { GiMusicalNotes, GiFishbone } from "react-icons/gi";
 import { LuDownload, LuEraser, LuPen, LuFileMusic, LuMusic } from "react-icons/lu";
 import { MiniPlayer } from "@/components/ui/mini-player";
+import confetti from "canvas-confetti";
+import clsx from "clsx";
+
+const GRID_SIZE = 3;
+const TILE_COUNT = GRID_SIZE * GRID_SIZE;
+const TILE_SIZE = 100 / GRID_SIZE + "%";
+const IMAGE_URL = "/dino.jpg";
+
+
+function isSolved(order: number[]) {
+    return order.every((val, idx) => val === idx);
+}
+
+function getAdjacentIndexes(index: number) {
+    const adj = [];
+    const row = Math.floor(index / GRID_SIZE);
+    const col = index % GRID_SIZE;
+
+    // Up
+    if (row > 0) adj.push(index - GRID_SIZE);
+    // Down
+    if (row < GRID_SIZE - 1) adj.push(index + GRID_SIZE);
+    // Left
+    if (col > 0) adj.push(index - 1);
+    // Right
+    if (col < GRID_SIZE - 1) adj.push(index + 1);
+
+    return adj;
+}
 
 const tracks = [
     {
@@ -54,7 +83,7 @@ const PlayBox: React.FC = () => {
                 />
             ),
             header: (
-                <SkeletonOne
+                <MiniplayerBox
                     tracks={tracks}
                     current={current}
                     setCurrent={setCurrent}
@@ -75,16 +104,23 @@ const PlayBox: React.FC = () => {
 
         },
         {
-            title: "Automated Proofreading",
-            description:
-                (
-                    <span className="text-sm">
-                        Let AI handle the proofreading of your documents.
-                    </span>
-                ),
-            header: <SkeletonTwo />,
+            title: "Sliding Block Puzzle",
+            // description: (
+            //     <span className="text-sm">
+            //         Let AI handle the proofreading of your documents.
+            //     </span>
+            // ),
+
+
+            // header: <SlidingPuzzle />,
+
+            header: (
+                <div className="w-full max-w-xs mx-auto aspect-square max-md:h-50">
+                    <SlidingPuzzle />
+                </div>
+            ),
             className: "md:col-span-1",
-            icon: <IconFileBroken className="h-4 w-4 text-neutral-500" />,
+            // icon: <IconFileBroken className="h-4 w-4 text-neutral-500" />,
         },
         {
             title: "Aquarium",
@@ -93,7 +129,7 @@ const PlayBox: React.FC = () => {
                     Hey! Toss me some treats — I'm starving! My developer forgot I exist.
                 </span>
             ),
-            header: <SkeletonThree />,
+            header: <AquariumBox />,
             className: "md:col-span-1",
             icon: <GiFishbone className="h-4 w-4 text-neutral-500" />,
         },
@@ -116,7 +152,7 @@ const PlayBox: React.FC = () => {
                     Express your creativity and bring your imagination to life through drawing!
                 </span>
             ),
-            header: <SkeletonFive />,
+            header: <DrawingBox />,
             className: "md:col-span-1",
         },
     ];
@@ -126,9 +162,10 @@ const PlayBox: React.FC = () => {
             id="playbox"
             className={`h-auto text-center ${roboto_mono.className}`}
         >
+            <h1 className="font-bold text-4xl mt-10">Fun Box</h1>
 
             {/* Bento Grid*/}
-            <BentoGrid className="max-w-4xl mx-auto mt-20 md:auto-rows-[20rem]">
+            <BentoGrid className="max-w-4xl mx-auto mt-10 md:auto-rows-[20rem]">
                 {items.map((item, i) => (
                     <BentoGridItem
                         key={i}
@@ -146,7 +183,7 @@ const PlayBox: React.FC = () => {
     );
 };
 
-const SkeletonOne = ({
+const MiniplayerBox = ({
     tracks,
     current,
     setCurrent,
@@ -196,51 +233,138 @@ const SkeletonOne = ({
     );
 };
 
-const SkeletonTwo = () => {
-    const variants = {
-        initial: { width: 0 },
-        animate: {
-            width: "100%",
-            transition: { duration: 0.2 },
-        },
-        hover: {
-            width: ["0%", "100%"],
-            transition: { duration: 2 },
-        },
-    };
+const SlidingPuzzle = () => {
+    const [tiles, setTiles] = useState<number[]>([]);
+    const [solved, setSolved] = useState(false);
 
-    // Start with empty array, fill after mount (client-side only)
-    const [widths, setWidths] = React.useState<number[]>([]);
+    // useEffect(() => {
+    //     const initial = Array.from({ length: TILE_COUNT }, (_, i) => i);
+    //     // Shuffle (Fisher-Yates)
+    //     for (let i = initial.length - 1; i > 0; i--) {
+    //         const j = Math.floor(Math.random() * (i + 1));
+    //         [initial[i], initial[j]] = [initial[j], initial[i]];
+    //     }
+    //     setTiles(initial);
+    // }, []);
+    useEffect(() => {
+        const makeEasyShuffle = (moves = 10) => {
+            let tiles = Array.from({ length: TILE_COUNT }, (_, i) => i); // start solved
+            let emptyIndex = TILE_COUNT - 1;
 
-    React.useEffect(() => {
-        setWidths(Array.from({ length: 6 }, () => Math.random() * (100 - 40) + 40));
+            for (let i = 0; i < moves; i++) {
+                const adj = getAdjacentIndexes(emptyIndex);
+                const rand = adj[Math.floor(Math.random() * adj.length)];
+                [tiles[emptyIndex], tiles[rand]] = [tiles[rand], tiles[emptyIndex]];
+                emptyIndex = rand;
+            }
+
+            return tiles;
+        };
+
+        setTiles(makeEasyShuffle(10)); // 10 easy moves
     }, []);
 
-    // Avoid hydration mismatch: render nothing until widths are set
-    if (widths.length === 0) return null;
+    // useEffect(() => {
+    //     setTiles(generateSolvableShuffle(TILE_COUNT));
+    // }, []);
+
+    const launchConfetti = () => {
+        confetti({
+            particleCount: 150,
+            spread: 70,
+            origin: { y: 0.5 },
+            angle: 90,
+            startVelocity: 45,
+            scalar: 1.2,
+            ticks: 200,
+        });
+    };
+
+    const moveSound = useRef<HTMLAudioElement | null>(null);
+    const successSound = useRef<HTMLAudioElement | null>(null);
+    const confettiFired = useRef(false);
+
+    useEffect(() => {
+        moveSound.current = new Audio("/music/puzzle_move.mp3");
+        moveSound.current.volume = 0.5;
+
+        successSound.current = new Audio("/music/success_puzzle.mp3");
+        successSound.current.volume = 0.5;
+    }, []);
+
+    const handleTileClick = (index: number) => {
+        const emptyIndex = tiles.indexOf(TILE_COUNT - 1);
+        const adjacent = getAdjacentIndexes(emptyIndex);
+
+        if (adjacent.includes(index)) {
+
+            const newTiles = [...tiles];
+            [newTiles[emptyIndex], newTiles[index]] = [
+                newTiles[index],
+                newTiles[emptyIndex],
+            ];
+            setTiles(newTiles);
+
+            const nowSolved = isSolved(newTiles);
+            setSolved(nowSolved);
+
+            if (nowSolved) {
+                launchConfetti();
+
+                if (successSound.current) {
+                    successSound.current.currentTime = 0;
+                    successSound.current.play().catch((e) => console.error("Audio error:", e));
+                }
+            } else {
+                if (moveSound.current) {
+                    moveSound.current.currentTime = 0;
+                    moveSound.current.play().catch((e) => console.error("Audio error:", e));
+                }
+            }
+        }
+    };
 
     return (
-        <motion.div
-            initial="initial"
-            animate="animate"
-            whileHover="hover"
-            className="flex flex-1 w-full h-full min-h-[6rem] dark:bg-dot-white/[0.2] bg-dot-black/[0.2] flex-col space-y-2"
+        <div
+            className={clsx(
+                "grid grid-cols-3 gap-1 aspect-square w-full h-full p-1 rounded-md transition-colors",
+                solved ? "bg-green-200 dark:bg-green-700" : "bg-neutral-100 dark:bg-neutral-800"
+            )}
         >
-            {widths.map((w, i) => (
-                <motion.div
-                    key={"skelenton-two" + i}
-                    variants={variants}
-                    style={{
-                        maxWidth: w + "%",
-                    }}
-                    className="flex flex-row rounded-full border border-neutral-100 dark:border-white/[0.2] p-2 items-center space-x-2 bg-neutral-100 dark:bg-black w-full h-4"
-                ></motion.div>
-            ))}
-        </motion.div>
+            {tiles.map((num, i) => {
+                const isEmpty = num === TILE_COUNT - 1;
+
+                const row = Math.floor(num / GRID_SIZE);
+                const col = num % GRID_SIZE;
+
+                return (
+                    <motion.div
+                        key={i}
+                        layout
+                        className={clsx(
+                            "rounded-sm overflow-hidden border border-white/20 cursor-pointer",
+                            isEmpty ? "bg-transparent" : "bg-neutral-100 dark:bg-neutral-800"
+                        )}
+                        onClick={() => !isEmpty && handleTileClick(i)}
+                    >
+                        {!isEmpty && (
+                            <div
+                                className="w-full h-full bg-no-repeat"
+                                style={{
+                                    backgroundImage: `url(${IMAGE_URL})`,
+                                    backgroundSize: `${GRID_SIZE * 100}% ${GRID_SIZE * 100}%`, // span across full grid
+                                    backgroundPosition: `${(col / (GRID_SIZE - 1)) * 100}% ${(row / (GRID_SIZE - 1)) * 100}%`,
+                                }}
+                            />
+                        )}
+                    </motion.div>
+                );
+            })}
+        </div>
     );
 };
 
-const SkeletonThree = () => {
+const AquariumBox = () => {
     const aquariumRef = useRef<HTMLDivElement>(null);
     const [fishList, setFishList] = useState<
         { id: number; x: number; y: number; targetX: number; targetY: number; direction: number }[]
@@ -352,9 +476,10 @@ const SkeletonThree = () => {
             {/* Aquarium Area */}
             <motion.div
                 ref={aquariumRef}
-                className="relative w-full flex-1 min-h-[6rem] rounded-lg overflow-hidden"
+                className="relative w-full rounded-lg overflow-hidden"
                 style={{
                     background: "linear-gradient(to bottom, #87ceeb 0%, #1e90ff 100%)",
+                    height: "clamp(200px, 40vh, 400px)", // Responsive height: min 200px, max 400px, preferred 40vh
                 }}
             >
                 {/* <div className="absolute bottom-0 w-full h-10 bg-green-950" /> */}
@@ -496,8 +621,7 @@ const SkeletonFour = () => {
     );
 };
 
-
-const SkeletonFive = () => {
+const DrawingBox = () => {
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
     const [isDrawing, setIsDrawing] = React.useState(false);
     const [context, setContext] = React.useState<CanvasRenderingContext2D | null>(null);
@@ -617,7 +741,7 @@ const SkeletonFive = () => {
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="relative flex flex-1 h-full flex-col rounded-md overflow-visible"
+            className="relative flex flex-1 flex-col rounded-md overflow-visible h-[300px] sm:h-full"
         >
             <canvas
                 ref={canvasRef}
