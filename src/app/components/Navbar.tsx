@@ -156,7 +156,7 @@ const Navbar: React.FC = () => {
                     className={`text-xl font-bold cursor-pointer transition-colors duration-300 ${theme === "light" ? "text-black" : "text-white"}`}
                     onClick={() => scrollToSection("about")}
                 >
-                    <img src="/m_logo.png" alt="logo" className={`w-16 h-auto rounded-full transition-all duration-300 ${theme === "dark" ? "invert" : ""}`} />
+                    <img src="/my_logo_trans.png" alt="logo" className={`w-16 h-auto transition-all duration-300 ${theme === "dark" ? "" : "invert"}`} />
                 </div>
 
 

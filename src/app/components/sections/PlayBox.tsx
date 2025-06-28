@@ -56,8 +56,27 @@ const shuffleArray = (array: any[]) => {
 };
 
 const CARD_BACK = "/card/back_card.jpg"; // Use your card back image path
-const JOKER_IMG = "/card/joker_card.jpg"; // Use your joker image path
-const NORMAL_IMG = "/card/queen_card.jpg"; // Use your normal card image path
+const CARD_IMAGES = [
+    "/card/joker_card.jpg",   // Joker
+    "/card/king_card.jpg",    // King
+    "/card/queen_card.jpg",   // Queen
+    "/card/jack_card.jpg",    // Jack
+    "/card/ace_card.jpg",     // Ace
+];
+
+const launchConfetti = () => {
+    confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.5 },
+        angle: 90,
+        startVelocity: 45,
+        scalar: 1.2,
+        ticks: 200,
+    });
+};
+
+
 
 // music player
 const tracks = [
@@ -84,7 +103,6 @@ const PlayBox: React.FC = () => {
 
     const [current, setCurrent] = React.useState(0);
     const [playing, setPlaying] = React.useState(false);
-
 
     const items = [
         {
@@ -157,7 +175,7 @@ const PlayBox: React.FC = () => {
             // ),
             header: <CardFind />,
             className: "md:col-span-2",
-            icon: <IconTableColumn className="h-4 w-4 text-neutral-500" />,
+            // icon: <IconTableColumn className="h-4 w-4 text-neutral-500" />,
         },
 
         {
@@ -270,33 +288,17 @@ const SlidingPuzzle = () => {
         setTiles(makeEasyShuffle(15)); // 10 easy moves
     }, []);
 
-    // useEffect(() => {
-    //     setTiles(generateSolvableShuffle(TILE_COUNT));
-    // }, []);
-
-    const launchConfetti = () => {
-        confetti({
-            particleCount: 150,
-            spread: 70,
-            origin: { y: 0.5 },
-            angle: 90,
-            startVelocity: 45,
-            scalar: 1.2,
-            ticks: 200,
-        });
-    };
-
-    const moveSound = useRef<HTMLAudioElement | null>(null);
     const successSound = useRef<HTMLAudioElement | null>(null);
-    const confettiFired = useRef(false);
+    const moveSound = useRef<HTMLAudioElement | null>(null);
 
     useEffect(() => {
         moveSound.current = new Audio("/music/puzzle_move.mp3");
-        moveSound.current.volume = 0.5;
+        moveSound.current.volume = 1;
 
         successSound.current = new Audio("/music/success_puzzle.mp3");
-        successSound.current.volume = 0.5;
+        successSound.current.volume = 1;
     }, []);
+
 
     const handleTileClick = (index: number) => {
         const emptyIndex = tiles.indexOf(TILE_COUNT - 1);
@@ -372,6 +374,13 @@ const SlidingPuzzle = () => {
 
 const AquariumBox = () => {
     const aquariumRef = useRef<HTMLDivElement>(null);
+    const dropSound = useRef<HTMLAudioElement | null>(null);
+
+    useEffect(() => {
+        dropSound.current = new Audio("/music/fish_food.mp3");
+        dropSound.current.volume = 0.8;
+    }, []);
+
     const [fishList, setFishList] = useState<
         { id: number; x: number; y: number; targetX: number; targetY: number; direction: number }[]
     >([]);
@@ -420,6 +429,11 @@ const AquariumBox = () => {
             const newFood = { id: foodId, x, y: 100 }; // Food falls to y = 100
             setFoodId((id) => id + 1);
             setFood((prev) => [...prev, newFood]);
+
+            if (dropSound.current) {
+                dropSound.current.currentTime = 0;
+                dropSound.current.play().catch((e) => console.error("Audio error:", e));
+            }
         }
     };
 
@@ -474,15 +488,15 @@ const AquariumBox = () => {
             {/* Food Drop Area */}
             <div
                 onClick={dropFood}
-                className="h-16 text-center flex items-center justify-center cursor-pointer"
+                className="h-16 text-center flex items-center justify-center cursor-pointer text-gray-600"
             >
-                Click to drop fish food
+                Click here to drop food
             </div>
 
             {/* Aquarium Area */}
             <motion.div
                 ref={aquariumRef}
-                className="relative w-full rounded-lg overflow-hidden"
+                className="relative w-full rounded-b-lg overflow-hidden"
                 style={{
                     background: "linear-gradient(to bottom, #87ceeb 0%, #1e90ff 100%)",
                     height: "clamp(200px, 40vh, 400px)", // Responsive height: min 200px, max 400px, preferred 40vh
@@ -544,133 +558,81 @@ const AquariumBox = () => {
     );
 };
 
-// const CardFind = () => {
-//     const first = {
-//         initial: {
-//             x: 20,
-//             rotate: -5,
-//         },
-//         hover: {
-//             x: 0,
-//             rotate: 0,
-//         },
-//     };
-//     const second = {
-//         initial: {
-//             x: -20,
-//             rotate: 5,
-//         },
-//         hover: {
-//             x: 0,
-//             rotate: 0,
-//         },
-//     };
-//     return (
-//         <motion.div
-//             initial="initial"
-//             animate="animate"
-//             whileHover="hover"
-//             className="flex flex-1 w-full h-full min-h-[6rem] dark:bg-dot-white/[0.2] bg-dot-black/[0.2] flex-row space-x-2"
-//         >
-//             <motion.div
-//                 variants={first}
-//                 className="h-full w-1/3 rounded-2xl bg-white p-4 dark:bg-black dark:border-white/[0.1] border border-neutral-200 flex flex-col items-center justify-center"
-//             >
-//                 <img
-//                     src="https://pbs.twimg.com/profile_images/1417752099488636931/cs2R59eW_400x400.jpg"
-//                     alt="avatar"
-//                     height="100"
-//                     width="100"
-//                     className="rounded-full h-10 w-10"
-//                 />
-//                 <p className="sm:text-sm text-xs text-center font-semibold text-neutral-500 mt-4">
-//                     Just code in Vanilla Javascript
-//                 </p>
-//                 <p className="border border-red-500 bg-red-100 dark:bg-red-900/20 text-red-600 text-xs rounded-full px-2 py-0.5 mt-4">
-//                     Delusional
-//                 </p>
-//             </motion.div>
-//             <motion.div className="h-full relative z-20 w-1/3 rounded-2xl bg-white p-4 dark:bg-black dark:border-white/[0.1] border border-neutral-200 flex flex-col items-center justify-center">
-//                 <img
-//                     src="https://pbs.twimg.com/profile_images/1417752099488636931/cs2R59eW_400x400.jpg"
-//                     alt="avatar"
-//                     height="100"
-//                     width="100"
-//                     className="rounded-full h-10 w-10"
-//                 />
-//                 <p className="sm:text-sm text-xs text-center font-semibold text-neutral-500 mt-4">
-//                     Tailwind CSS is cool, you know
-//                 </p>
-//                 <p className="border border-green-500 bg-green-100 dark:bg-green-900/20 text-green-600 text-xs rounded-full px-2 py-0.5 mt-4">
-//                     Sensible
-//                 </p>
-//             </motion.div>
-//             <motion.div
-//                 variants={second}
-//                 className="h-full w-1/3 rounded-2xl bg-white p-4 dark:bg-black dark:border-white/[0.1] border border-neutral-200 flex flex-col items-center justify-center"
-//             >
-//                 <img
-//                     src="https://pbs.twimg.com/profile_images/1417752099488636931/cs2R59eW_400x400.jpg"
-//                     alt="avatar"
-//                     height="100"
-//                     width="100"
-//                     className="rounded-full h-10 w-10"
-//                 />
-//                 <p className="sm:text-sm text-xs text-center font-semibold text-neutral-500 mt-4">
-//                     I love angular, RSC, and Redux.
-//                 </p>
-//                 <p className="border border-orange-500 bg-orange-100 dark:bg-orange-900/20 text-orange-600 text-xs rounded-full px-2 py-0.5 mt-4">
-//                     Helpless
-//                 </p>
-//             </motion.div>
-//         </motion.div>
-//     );
-// };
-
 const CardFind = () => {
     const [cards, setCards] = useState<any[]>([]);
     const [shuffling, setShuffling] = useState(false);
     const [showResult, setShowResult] = useState<number | null>(null);
+    const [difficulty, setDifficulty] = useState("medium");
+    const [hasChosen, setHasChosen] = useState(false);
+    const allCardsFaceDown = cards.length > 0 && cards.every((card) => card.faceDown);
+    const successSound = useRef<HTMLAudioElement | null>(null);
+    const wrongSound = useRef<HTMLAudioElement | null>(null);
+
+    useEffect(() => {
+        const initial = initCards().map((card) => ({ ...card, faceDown: false }));
+        setCards(initial);
+    }, []);
+
+
+    useEffect(() => {
+        wrongSound.current = new Audio("/music/wrong_sound.mp3");
+        wrongSound.current.volume = 1;
+
+        successSound.current = new Audio("/music/success_puzzle.mp3");
+        successSound.current.volume = 1;
+    }, []);
 
     const initCards = () => {
-        const cardSet = [
-            { id: 0, isJoker: true },
-            { id: 1, isJoker: false },
-            { id: 2, isJoker: false },
-            { id: 3, isJoker: false },
-            { id: 4, isJoker: false },
-        ];
-        return shuffleArray(cardSet);
+        const cards = CARD_IMAGES.map((img, i) => ({
+            id: i,
+            isJoker: i === 0, // First image is the joker
+            image: img,
+            faceDown: false,
+        }));
+        return shuffleArray(cards);
+    };
+
+    const getShuffleDelay = () => {
+        switch (difficulty) {
+            case "easy": return 500;
+            case "medium": return 300;
+            case "hard": return 250;
+            case "impossible": return 150;
+            default: return 300;
+        }
     };
 
     const startGame = () => {
-        const shuffled = initCards().map((card) => ({ ...card, faceDown: true }));
-        setCards(shuffled);
+        const flipped = cards.map((card) => ({ ...card, faceDown: true }));
+        setCards(flipped);
         setShowResult(null);
         setShuffling(true);
+        // Wait for flip animation to finish before shuffling
+        setTimeout(() => {
+            let count = 0;
+            let current = [...flipped];
 
-        let count = 0;
-        let current = [...shuffled];
+            const shuffleStep = () => {
+                const i = Math.floor(Math.random() * current.length);
+                let j = Math.floor(Math.random() * current.length);
+                while (j === i) j = Math.floor(Math.random() * current.length);
 
-        const shuffleStep = () => {
-            const i = Math.floor(Math.random() * current.length);
-            let j = Math.floor(Math.random() * current.length);
-            while (j === i) j = Math.floor(Math.random() * current.length);
+                [current[i], current[j]] = [current[j], current[i]];
+                setCards([...current]);
 
-            // Swap cards
-            [current[i], current[j]] = [current[j], current[i]];
-            setCards([...current]); // This triggers animation thanks to layoutId
+                count++;
+                if (count < 20) {
+                    setTimeout(shuffleStep, getShuffleDelay());
+                } else {
+                    setShuffling(false);
+                }
+            };
 
-            count++;
-            if (count < 20) {
-                setTimeout(shuffleStep, 300); // You can tweak the duration here
-            } else {
-                setShuffling(false);
-            }
-        };
-
-        shuffleStep();
+            shuffleStep();
+            setHasChosen(false);
+        }, 1000); // ⏳ Delay for flip animation
     };
+
 
 
     const handleCardClick = (index: number) => {
@@ -681,6 +643,19 @@ const CardFind = () => {
         }));
         setCards(revealed);
         setShowResult(index);
+        setHasChosen(true);
+        if (revealed[index].isJoker) {
+            launchConfetti();
+            if (successSound.current) {
+                successSound.current.currentTime = 0;
+                successSound.current.play().catch((e) => console.error("Audio error:", e));
+            }
+        } else {
+            if (wrongSound.current) {
+                wrongSound.current.currentTime = 0;
+                wrongSound.current.play().catch((e) => console.error("Audio error:", e));
+            }
+        }
     };
 
     return (
@@ -691,8 +666,8 @@ const CardFind = () => {
                         key={card.id}
                         layoutId={`card-${card.id}`}
                         layout
-                        className="w-20 h-32 mx-1 border rounded-lg shadow-lg cursor-pointer perspective"
-                        onClick={() => handleCardClick(index)} // ✅ Correct
+                        className="sm:w-20 sm:h-32 w-16 h-24 mx-1 cursor-pointer perspective"
+                        onClick={() => { if (card.faceDown) handleCardClick(index) }}
                     >
 
                         <motion.div
@@ -701,31 +676,62 @@ const CardFind = () => {
                             transition={{ duration: 0.6 }}
                         >
                             <img
-                                src={card.isJoker ? JOKER_IMG : NORMAL_IMG}
-                                className="card-face front w-full h-full rounded-lg"
+                                src={card.image}
+                                className="card-face front w-full h-full rounded-lg hover:scale-105 transition-transform duration-300"
                             />
                             <img
                                 src={CARD_BACK}
-                                className="card-face back w-full h-full rounded-lg"
+                                className="card-face back w-full h-full rounded-lg hover:scale-105 transition-transform duration-300"
                             />
                         </motion.div>
                     </motion.div>
                 ))}
             </div>
 
-
-            <button
-                onClick={startGame}
-                className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            <div
+                className="mt-1 text-lg font-semibold min-h-[1.5rem] text-center"
+                style={{
+                    visibility: showResult === null ? "hidden" : "visible",
+                    opacity: showResult === null ? 0 : 1,
+                    transition: "opacity 0.3s ease",
+                }}
             >
-                Start
-            </button>
+                {cards[showResult ?? 0]?.isJoker
+                    ? "🎉 You found the Joker!"
+                    : "❌ Try again!"}
+            </div>
 
-            {showResult !== null && (
-                <div className="mt-1 text-lg font-semibold">
-                    {cards[showResult].isJoker ? "🎉 You found the Joker!" : `❌ Try again!`}
+
+            <div className="flex w-full justify-between items-center mt-4">
+                <div className="w-1/3" />
+
+                <div className="flex justify-center w-1/3">
+                    <button
+                        onClick={startGame}
+                        disabled={shuffling || allCardsFaceDown}
+                        className="min-h-[38px] bg-gradient-to-tr from-violet-500 via-pink-500 to-red-500 text-white shadow-lg hover:scale-110 transition px-4 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        Start
+                    </button>
                 </div>
-            )}
+
+                <div className="w-1/3 flex justify-end">
+                    <select
+                        value={difficulty}
+                        onChange={(e) => setDifficulty(e.target.value)}
+                        disabled={shuffling || allCardsFaceDown}
+                        className="min-h-[38px] bg-white dark:bg-black border px-2 py-1 rounded text-sm shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                        <option value="impossible">Impossible</option>
+                    </select>
+                </div>
+            </div>
+
+
+
         </div>
     );
 };
@@ -775,6 +781,42 @@ const DrawingBox = () => {
         }
     }, []);
 
+    React.useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        const handleTouchStart = (e: TouchEvent) => {
+            e.preventDefault();
+            startTouchDrawing({
+                touches: e.touches,
+                preventDefault: () => e.preventDefault(),
+            } as unknown as React.TouchEvent<HTMLCanvasElement>);
+        };
+
+        const handleTouchMove = (e: TouchEvent) => {
+            e.preventDefault();
+            touchDraw({
+                touches: e.touches,
+                preventDefault: () => e.preventDefault(),
+            } as unknown as React.TouchEvent<HTMLCanvasElement>);
+        };
+
+        const handleTouchEnd = () => {
+            stopDrawing();
+        };
+
+        canvas.addEventListener("touchstart", handleTouchStart, { passive: false });
+        canvas.addEventListener("touchmove", handleTouchMove, { passive: false });
+        canvas.addEventListener("touchend", handleTouchEnd);
+
+        return () => {
+            canvas.removeEventListener("touchstart", handleTouchStart);
+            canvas.removeEventListener("touchmove", handleTouchMove);
+            canvas.removeEventListener("touchend", handleTouchEnd);
+        };
+    }, [context, isErasing, brushColor, brushSize]);
+
+
     // Handle mouse down to start drawing or erasing
     const startDrawing = (event: React.MouseEvent<HTMLCanvasElement>) => {
         if (context) {
@@ -795,6 +837,43 @@ const DrawingBox = () => {
             }
 
         }
+    };
+
+    const startTouchDrawing = (e: React.TouchEvent<HTMLCanvasElement>) => {
+        e.preventDefault();
+
+        const touch = e.touches[0];
+        const rect = canvasRef.current?.getBoundingClientRect();
+        const x = touch.clientX - (rect?.left || 0);
+        const y = touch.clientY - (rect?.top || 0);
+
+        if (context) {
+            setIsDrawing(true);
+            context.beginPath();
+            context.moveTo(x, y);
+            context.lineWidth = brushSize;
+
+            if (isErasing) {
+                context.globalCompositeOperation = "destination-out";
+            } else {
+                context.globalCompositeOperation = "source-over";
+                context.strokeStyle = brushColor;
+            }
+        }
+    };
+
+    const touchDraw = (e: React.TouchEvent<HTMLCanvasElement>) => {
+        e.preventDefault();
+
+        if (!isDrawing || !context) return;
+
+        const touch = e.touches[0];
+        const rect = canvasRef.current?.getBoundingClientRect();
+        const x = touch.clientX - (rect?.left || 0);
+        const y = touch.clientY - (rect?.top || 0);
+
+        context.lineTo(x, y);
+        context.stroke();
     };
 
     // Handle mouse move to draw or erase
@@ -847,105 +926,212 @@ const DrawingBox = () => {
     };
 
     return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="relative flex flex-1 flex-col rounded-md overflow-visible h-[300px] sm:h-full"
-        >
-            <canvas
-                ref={canvasRef}
-                onMouseDown={startDrawing}
-                onMouseMove={draw}
-                onMouseUp={stopDrawing}
-                onMouseOut={stopDrawing}
-                className="w-full h-full flex-1 rounded-md bg-white"
-            // style={{ cursor: isErasing ? "grab" : "crosshair" }}
-            />
-            <div className="absolute bottom-0 right-0 flex items-end gap-2 rounded-tl-lg shadow-md z-50">
-                {/* Eraser */}
-                <button
-                    onClick={toggleEraser}
-                    className={`relative group p-2 rounded-full text-black ${isErasing
-                        ? "bg-gradient-to-r from-pink-500 to-violet-500 "
-                        : "bg-red-500 hover:bg-gray-400"
-                        } transition`}
-                >
-                    <span className="tooltip">
-                        {isErasing ? "Draw" : "Eraser"}
-                    </span>
-                    {isErasing ? <LuPen className="h-5 w-5" /> : <LuEraser className="h-5 w-5" />}
-                </button>
+        <div className="w-full flex justify-center items-center sm:block">
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="relative flex flex-1 flex-col rounded-md overflow-visible h-[300px] sm:h-full"
+            >
+                <canvas
+                    ref={canvasRef}
+                    onMouseDown={startDrawing}
+                    onMouseMove={draw}
+                    onMouseUp={stopDrawing}
+                    onMouseOut={stopDrawing}
+                    // onTouchStart={startTouchDrawing}
+                    // onTouchMove={touchDraw}
+                    // onTouchEnd={stopDrawing}
+                    className="w-full h-full flex-1 rounded-md bg-white"
+                />
 
-                {/* Download */}
-                <button
-                    onClick={saveCanvasAsImage}
-                    className="relative group p-2 rounded-full bg-green-500 text-black hover:bg-green-600 transition"
-                >
-                    <span className="tooltip">
-                        Download the drawing.
-                    </span>
-                    <LuDownload className="h-5 w-5" />
-                </button>
-
-                {/* Color Picker (click) */}
-                <div className="relative group dropdown-button">
-                    <span className="tooltip">
-                        Change color
-                    </span>
-                    <input
-                        type="color"
-                        value={brushColor}
-                        onChange={(e) => {
-                            setBrushColor(e.target.value);
-                            setIsErasing(false);
-                        }}
-                        className="w-8 h-8 rounded-full border border-black cursor-pointer"
-                        style={{ padding: 0 }}
-                    />
-                </div>
-
-
-                {/* Size Picker (click) */}
-                <div className="relative group dropdown-button">
+                <div className="absolute bottom-0 right-0 flex items-end gap-2 rounded-tl-lg shadow-md z-50">
+                    {/* Eraser */}
                     <button
-                        onClick={() => {
-                            setShowSizePicker(!showSizePicker);
-                            setShowColorPicker(false);
-                        }}
-                        className="w-8 h-8 rounded-full bg-gray-300 border border-gray-500 flex items-center justify-center"
+                        onClick={toggleEraser}
+                        className={`relative group p-2 rounded-full text-black ${isErasing
+                            ? "bg-gradient-to-r from-pink-500 to-violet-500 "
+                            : "bg-red-500 hover:bg-gray-400"
+                            } transition`}
                     >
-                        <div className="rounded-full bg-black" style={{ width: brushSize, height: brushSize }} />
+                        <span className="tooltip">
+                            {isErasing ? "Draw" : "Eraser"}
+                        </span>
+                        {isErasing ? <LuPen className="h-5 w-5" /> : <LuEraser className="h-5 w-5" />}
                     </button>
-                    <span className="tooltip">
-                        Resize
-                    </span>
-                    {showSizePicker && (
-                        <div className="absolute bottom-full right-0 mb-2 flex gap-1 p-2 bg-white rounded shadow z-10">
-                            {[2, 4, 6, 8, 10, 14, 18, 24].map((size) => (
-                                <button
-                                    key={size}
-                                    onClick={() => {
-                                        setBrushSize(size);
-                                        setShowSizePicker(false);
-                                    }}
-                                    className={`rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition`}
-                                    style={{
-                                        width: size + 10,
-                                        height: size + 10,
-                                        border: brushSize === size ? "2px solid black" : "1px solid gray"
-                                    }}
-                                >
-                                    <div className="bg-black rounded-full" style={{ width: size, height: size }} />
-                                </button>
-                            ))}
-                        </div>
-                    )}
+
+                    {/* Download */}
+                    <button
+                        onClick={saveCanvasAsImage}
+                        className="relative group p-2 rounded-full bg-green-500 text-black hover:bg-green-600 transition"
+                    >
+                        <span className="tooltip">
+                            Download the drawing.
+                        </span>
+                        <LuDownload className="h-5 w-5" />
+                    </button>
+
+                    {/* Color Picker (click) */}
+                    <div className="relative group dropdown-button">
+                        <span className="tooltip">
+                            Change color
+                        </span>
+                        <input
+                            type="color"
+                            value={brushColor}
+                            onChange={(e) => {
+                                setBrushColor(e.target.value);
+                                setIsErasing(false);
+                            }}
+                            className="w-8 h-8 rounded-full border border-black cursor-pointer"
+                            style={{ padding: 0 }}
+                        />
+                    </div>
+
+
+                    {/* Size Picker (click) */}
+                    <div className="relative group dropdown-button">
+                        <button
+                            onClick={() => {
+                                setShowSizePicker(!showSizePicker);
+                                setShowColorPicker(false);
+                            }}
+                            className="w-8 h-8 rounded-full bg-gray-300 border border-gray-500 flex items-center justify-center"
+                        >
+                            <div className="rounded-full bg-black" style={{ width: brushSize, height: brushSize }} />
+                        </button>
+                        <span className="tooltip">
+                            Resize
+                        </span>
+                        {showSizePicker && (
+                            <div className="absolute bottom-full right-0 mb-2 flex gap-1 p-2 bg-white rounded shadow z-10">
+                                {[2, 4, 6, 8, 10, 14, 18, 24].map((size) => (
+                                    <button
+                                        key={size}
+                                        onClick={() => {
+                                            setBrushSize(size);
+                                            setShowSizePicker(false);
+                                        }}
+                                        className={`rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition`}
+                                        style={{
+                                            width: size + 10,
+                                            height: size + 10,
+                                            border: brushSize === size ? "2px solid black" : "1px solid gray"
+                                        }}
+                                    >
+                                        <div className="bg-black rounded-full" style={{ width: size, height: size }} />
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
-            </div>
 
 
-        </motion.div>
+            </motion.div>
+        </div>
+
     );
+
+    // return (
+    //     <motion.div
+    //         initial={{ opacity: 0 }}
+    //         animate={{ opacity: 1 }}
+    //         className="relative flex flex-1 flex-col rounded-md overflow-visible h-[300px] sm:h-full"
+    //     >
+    //         <canvas
+    //             ref={canvasRef}
+    //             onMouseDown={startDrawing}
+    //             onMouseMove={draw}
+    //             onMouseUp={stopDrawing}
+    //             onMouseOut={stopDrawing}
+    //             className="w-full h-full flex-1 rounded-md bg-white max-w-xs sm:max-w-none"
+    //         // style={{ cursor: isErasing ? "grab" : "crosshair" }}
+    //         />
+    //         <div className="absolute bottom-0 right-0 flex items-end gap-2 rounded-tl-lg shadow-md z-50">
+    //             {/* Eraser */}
+    //             <button
+    //                 onClick={toggleEraser}
+    //                 className={`relative group p-2 rounded-full text-black ${isErasing
+    //                     ? "bg-gradient-to-r from-pink-500 to-violet-500 "
+    //                     : "bg-red-500 hover:bg-gray-400"
+    //                     } transition`}
+    //             >
+    //                 <span className="tooltip">
+    //                     {isErasing ? "Draw" : "Eraser"}
+    //                 </span>
+    //                 {isErasing ? <LuPen className="h-5 w-5" /> : <LuEraser className="h-5 w-5" />}
+    //             </button>
+
+    //             {/* Download */}
+    //             <button
+    //                 onClick={saveCanvasAsImage}
+    //                 className="relative group p-2 rounded-full bg-green-500 text-black hover:bg-green-600 transition"
+    //             >
+    //                 <span className="tooltip">
+    //                     Download the drawing.
+    //                 </span>
+    //                 <LuDownload className="h-5 w-5" />
+    //             </button>
+
+    //             {/* Color Picker (click) */}
+    //             <div className="relative group dropdown-button">
+    //                 <span className="tooltip">
+    //                     Change color
+    //                 </span>
+    //                 <input
+    //                     type="color"
+    //                     value={brushColor}
+    //                     onChange={(e) => {
+    //                         setBrushColor(e.target.value);
+    //                         setIsErasing(false);
+    //                     }}
+    //                     className="w-8 h-8 rounded-full border border-black cursor-pointer"
+    //                     style={{ padding: 0 }}
+    //                 />
+    //             </div>
+
+
+    //             {/* Size Picker (click) */}
+    //             <div className="relative group dropdown-button">
+    //                 <button
+    //                     onClick={() => {
+    //                         setShowSizePicker(!showSizePicker);
+    //                         setShowColorPicker(false);
+    //                     }}
+    //                     className="w-8 h-8 rounded-full bg-gray-300 border border-gray-500 flex items-center justify-center"
+    //                 >
+    //                     <div className="rounded-full bg-black" style={{ width: brushSize, height: brushSize }} />
+    //                 </button>
+    //                 <span className="tooltip">
+    //                     Resize
+    //                 </span>
+    //                 {showSizePicker && (
+    //                     <div className="absolute bottom-full right-0 mb-2 flex gap-1 p-2 bg-white rounded shadow z-10">
+    //                         {[2, 4, 6, 8, 10, 14, 18, 24].map((size) => (
+    //                             <button
+    //                                 key={size}
+    //                                 onClick={() => {
+    //                                     setBrushSize(size);
+    //                                     setShowSizePicker(false);
+    //                                 }}
+    //                                 className={`rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition`}
+    //                                 style={{
+    //                                     width: size + 10,
+    //                                     height: size + 10,
+    //                                     border: brushSize === size ? "2px solid black" : "1px solid gray"
+    //                                 }}
+    //                             >
+    //                                 <div className="bg-black rounded-full" style={{ width: size, height: size }} />
+    //                             </button>
+    //                         ))}
+    //                     </div>
+    //                 )}
+    //             </div>
+    //         </div>
+
+
+    //     </motion.div>
+    // );
 };
 
 export default PlayBox;
