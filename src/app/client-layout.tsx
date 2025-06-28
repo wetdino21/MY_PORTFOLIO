@@ -47,7 +47,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 <div className="text-4xl md:text-5xl text-white font-bold neon-text mb-4 animate-pulse">
                     🚀 Launching...
                 </div>
-                <div className="text-lg md:text-xl text-purple-300 italic transition-all duration-300">
+                <div className="text-sm md:text-xl text-purple-300 italic transition-all duration-300">
                     {funnyMessages[messageIndex]}
                 </div>
                 <style jsx>{`

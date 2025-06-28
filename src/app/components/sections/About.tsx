@@ -172,7 +172,7 @@ const About: React.FC = () => {
                                 <CardItem className="flex gap-2">
                                     {/* Open in new tab */}
                                     <a
-                                        href="/resume/my_resume.pdf"
+                                        href="/resume/Michael_Resume.pdf"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="icon-box relative group"
@@ -183,7 +183,7 @@ const About: React.FC = () => {
 
                                     {/* Download file */}
                                     <a
-                                        href="/resume/my_resume.pdf"
+                                        href="/resume/Michael_Resume.pdf"
                                         download
                                         className="icon-box relative group"
                                     >
@@ -225,7 +225,12 @@ const About: React.FC = () => {
                         />
                     </div>
 
-                    <p className="text-lg mt-4">I build things full stack.</p>
+                    <div className="w-full flex justify-center lg:justify-start">
+                        <p className="text-sm mt-4 text-center lg:text-left w-full max-w-md">
+                            Enthusiastic full-stack developer who loves turning ideas into interactive web and mobile experiences.
+                        </p>
+                    </div>
+
                 </div>
 
             </div>

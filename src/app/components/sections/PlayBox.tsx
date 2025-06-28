@@ -195,7 +195,8 @@ const PlayBox: React.FC = () => {
             id="playbox"
             className={`h-auto text-center ${roboto_mono.className}`}
         >
-            <h1 className="font-bold text-4xl mt-10">Fun Box</h1>
+            <h1 className="font-bold text-4xl mt-10">PLay Box</h1>
+            <p className="mt-2">Where fun meets functionality, because showing is better than telling.</p>
 
             {/* Bento Grid*/}
             <BentoGrid className="max-w-4xl mx-auto mt-10 md:auto-rows-[20rem]">
@@ -786,7 +787,7 @@ const DrawingBox = () => {
         if (!canvas) return;
 
         const handleTouchStart = (e: TouchEvent) => {
-            e.preventDefault();
+            // e.preventDefault();
             startTouchDrawing({
                 touches: e.touches,
                 preventDefault: () => e.preventDefault(),
@@ -840,7 +841,7 @@ const DrawingBox = () => {
     };
 
     const startTouchDrawing = (e: React.TouchEvent<HTMLCanvasElement>) => {
-        e.preventDefault();
+        // e.preventDefault();
 
         const touch = e.touches[0];
         const rect = canvasRef.current?.getBoundingClientRect();
@@ -863,7 +864,7 @@ const DrawingBox = () => {
     };
 
     const touchDraw = (e: React.TouchEvent<HTMLCanvasElement>) => {
-        e.preventDefault();
+        // e.preventDefault();
 
         if (!isDrawing || !context) return;
 
@@ -926,11 +927,11 @@ const DrawingBox = () => {
     };
 
     return (
-        <div className="w-full flex justify-center items-center sm:block">
+        <div className="w-full flex justify-center items-center">
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="relative flex flex-1 flex-col rounded-md overflow-visible h-[300px] sm:h-full"
+                className="relative flex flex-1 flex-col rounded-md overflow-visible h-[200px]"
             >
                 <canvas
                     ref={canvasRef}
@@ -938,10 +939,11 @@ const DrawingBox = () => {
                     onMouseMove={draw}
                     onMouseUp={stopDrawing}
                     onMouseOut={stopDrawing}
-                    // onTouchStart={startTouchDrawing}
-                    // onTouchMove={touchDraw}
-                    // onTouchEnd={stopDrawing}
-                    className="w-full h-full flex-1 rounded-md bg-white"
+                    //mobile
+                    onTouchStart={startTouchDrawing}
+                    onTouchMove={touchDraw}
+                    onTouchEnd={stopDrawing}
+                    className="w-full h-full rounded-md bg-white"
                 />
 
                 <div className="absolute bottom-0 right-0 flex items-end gap-2 rounded-tl-lg shadow-md z-50">

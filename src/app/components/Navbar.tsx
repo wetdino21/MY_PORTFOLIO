@@ -156,14 +156,14 @@ const Navbar: React.FC = () => {
                     className={`text-xl font-bold cursor-pointer transition-colors duration-300 ${theme === "light" ? "text-black" : "text-white"}`}
                     onClick={() => scrollToSection("about")}
                 >
-                    <img src="/my_logo_trans.png" alt="logo" className={`w-16 h-auto transition-all duration-300 ${theme === "dark" ? "" : "invert"}`} />
+                    <img src="/my_logo_trans.png" alt="logo" className={`w-16 h-auto transition-all hover:scale-105 duration-300 ${theme === "dark" ? "" : "invert"}`} />
                 </div>
 
 
                 {/* Desktop Nav Links */}
                 <ul className="hidden md:flex gap-8">
                     {[
-                        { id: "about", label: "About_Me" },
+                        { id: "about", label: "About" },
                         { id: "projects", label: "Projects" },
                         { id: "contact", label: "Contact" },
                     ].map((item) => {
@@ -175,7 +175,7 @@ const Navbar: React.FC = () => {
                                 onClick={() => scrollToSection(item.id)}
                                 aria-current={isActive ? "page" : undefined}
                             >
-                                <motion.span
+                                {/* <motion.span
                                     className={`block transition-transform duration-200 
                                         ${!isActive
                                             ? theme === "light"
@@ -185,6 +185,26 @@ const Navbar: React.FC = () => {
                                         } 
                                         `}
                                     animate={{ scale: isActive ? 1.2 : 1 }}
+                                    transition={{ duration: 0.2 }}
+                                >
+                                    {item.label}
+                                </motion.span> */}
+
+                                <motion.span
+                                    className={`
+                                        block px-4 py-1 rounded-md transition-all duration-300
+                                        ${item.id === "contact"
+                                            ? "relative text-white animated-gradient shadow-lg hover:scale-105"
+                                            : isActive
+                                                ? theme === "light"
+                                                    ? "text-black"
+                                                    : "text-white"
+                                                : theme === "light"
+                                                    ? "text-gray-500 group-hover:text-black"
+                                                    : "text-gray-400 group-hover:text-white"
+                                        }
+                                    `}
+                                    animate={{ scale: isActive ? 1.1 : 1 }}
                                     transition={{ duration: 0.2 }}
                                 >
                                     {item.label}
@@ -247,7 +267,33 @@ const Navbar: React.FC = () => {
                                 { id: "contact", label: "Contact" },
                             ].map((item) => {
                                 const isActive = activeSection === item.id;
-                                return (
+                                // return (
+                                //     <li
+                                //         key={item.id}
+                                //         className={`cursor-pointer font-bold ${isActive
+                                //             ? theme === "light"
+                                //                 ? "text-black"
+                                //                 : "text-white"
+                                //             : theme === "light"
+                                //                 ? "text-gray-500"
+                                //                 : "text-gray-400"
+                                //             }`}
+                                //         onClick={() => scrollToSection(item.id)}
+                                //     >
+                                //         {item.label}
+                                //     </li>
+                                // );
+
+                                return item.id === "contact" ? (
+                                    <li
+                                        key={item.id}
+                                        className={`cursor-pointer font-bold px-4 py-2 rounded-md text-white 
+        bg-gradient-to-r from-pink-500 to-purple-500 animate-gradient-x shadow-md`}
+                                        onClick={() => scrollToSection(item.id)}
+                                    >
+                                        {item.label}
+                                    </li>
+                                ) : (
                                     <li
                                         key={item.id}
                                         className={`cursor-pointer font-bold ${isActive
@@ -263,6 +309,7 @@ const Navbar: React.FC = () => {
                                         {item.label}
                                     </li>
                                 );
+
                             })}
                         </ul>
                     </motion.div>

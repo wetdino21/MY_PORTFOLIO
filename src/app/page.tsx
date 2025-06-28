@@ -9,8 +9,8 @@ const Page: React.FC = () => {
     <main>
       <About />
       <Projects />
-      <Contact />
       <PlayBox />
+      <Contact />
     </main>
   );
 };
